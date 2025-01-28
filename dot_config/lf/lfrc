@@ -1,0 +1,62 @@
+set previewer ctpv
+set cleaner ctpvclear
+&ctpv -s $id
+&ctpvquit $id
+
+set ignorecase true
+set icons true
+
+cmd mkdir ${{
+  printf "Directory Name: "
+  read ans
+  mkdir "$ans"
+}}
+
+cmd mkfile ${{
+  printf "File Name: "
+  read ans
+  $EDITOR "$ans"
+}}
+
+# Archive bindings
+cmd unarchive ${{
+  printf "Unarchive to: "
+  read ans
+  mkdir "$ans"
+  case "$f" in
+      *.zip) unzip "$f" -d "$ans";;
+      *.rar) unrar x "$f" ;;
+      *.tar.gz) tar -xzvf "$f" ;;
+      *.tar.bz2) tar -xjvf "$f" ;;
+      *.tar) tar -xvf "$f" ;;
+      *.7z) 7z e "$f" ;;
+      *) echo "Unsupported format" ;;
+  esac
+}}
+
+map au unarchive
+
+# Unbind defaults
+map c
+map d
+map m
+
+# Basic Functions
+map . set hidden!
+map dd delete
+map dr $trashy restore
+map de $trashy empty --all
+map p paste
+map x cut
+map y copy
+map <enter> open
+map R reload
+map mf mkfile
+map md mkdir
+map C clear
+
+map gc cd ~/.config
+map gd cd ~/Downloads
+map gD cd ~/Desktop
+map gv cd ~/Vaults/UNSW
+map gV cd ~/Videos
