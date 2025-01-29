@@ -23,9 +23,9 @@ alias jack-in="~/.bin/ssh_UNSW/ssh_to_UNSW.sh"
 alias transfer="~/.bin/ssh_UNSW/rsync_from_local_to_UNSW.sh"
 alias gimme="~/.bin/ssh_UNSW/rsync_from_UNSW_to_local.sh"
 
-#export TERM='xterm-256color'
-#export EDITOR='nvim'
-#export VISUAL='nvim'
+export TERM='xterm-256color'
+export EDITOR='nvim'
+export VISUAL='nvim'
 
 eval "$(fzf --bash)"
 

@@ -12,8 +12,8 @@ return{
            local ls = require("luasnip")
 
            vim.keymap.set({"i"}, "<C-o>", function() ls.expand() end, {silent = true})
-           vim.keymap.set({"i", "s"}, "<C-o>", function() ls.jump( 1) end, {silent = true})
-           vim.keymap.set({"i", "s"}, "<C-i>", function() ls.jump(-1) end, {silent = true})
+           vim.keymap.set({"i", "s"}, "<C-n>", function() ls.jump( 1) end, {silent = true})
+           vim.keymap.set({"i", "s"}, "<C-m>", function() ls.jump(-1) end, {silent = true})
 
            vim.keymap.set({"i", "s"}, "<C-f>", function()
                if ls.choice_active() then
@@ -41,12 +41,10 @@ return{
                    documentation = cmp.config.window.bordered(),
                },
                mapping = cmp.mapping.preset.insert({
-                   --['<Tab>'] = cmp.mapping.scroll_docs(-4),
-                   --['<C-f>'] = cmp.mapping.scroll_docs(4),
-                   ['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item()),
-                   ['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item()),
-                   ['<C-Space>'] = cmp.mapping.complete(),
-                   ['<C-e>'] = cmp.mapping.abort(),
+                   ['<C-J>'] = cmp.mapping(cmp.mapping.select_next_item()),
+                   ['<C-K>'] = cmp.mapping(cmp.mapping.select_prev_item()),
+                   ['<C-SPACE>'] = cmp.mapping.complete(),
+                   ['<C-E>'] = cmp.mapping.abort(),
                    ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
                }),
                sources = cmp.config.sources({
