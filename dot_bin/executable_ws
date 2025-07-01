@@ -1,0 +1,102 @@
+#!/bin/dash
+
+savename="/home/minhn/.bin/.ws_save"
+
+start_tmux() {
+    local session_name win1_name win2_name start_dir
+    session_name="$1"
+    win1_name="$2"
+    win2_name="$3"
+    start_dir="$4"
+
+    tmux new-session -d -s "$session_name" -c "$start_dir"
+    tmux new-window -t "$session_name" -c "$start_dir"
+    tmux rename-window -t "${session_name}:1" "$win2_name"
+    tmux send-keys -t "${session_name}:1" "ls" C-m
+    tmux rename-window -t "${session_name}:0" "$win1_name"
+    tmux select-window -t "${session_name}:0" 
+    tmux send-keys -t "${session_name}:0" "ls" C-m
+    tmux a -t "$session_name" 
+
+    return 0
+}
+
+start_tmux_remote() {
+    local session_name win1_name win2_name
+    session_name="$1"
+    win1_name="$2"
+    win2_name="$3"
+
+    # Mount if not mounted
+    mountpoint -q /mnt/UNSW_remote/ ||
+        sshfs -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 z5662654@login.cse.unsw.edu.au:/home/z5662654/ /mnt/UNSW_remote/
+
+    cd /mnt/UNSW_remote/Workspace/"$session_name"
+
+    tmux new-session -d -s "$session_name"
+    tmux new-window -t "$session_name"
+    tmux rename-window -t "${session_name}:1" "$win2_name"
+    tmux send-keys -t "${session_name}:1" "ssh -Y z5662654@login.cse.unsw.edu.au" C-m
+    tmux send-keys -t "${session_name}:1" "cd Workspace/$session_name" C-m
+    tmux send-keys -t "${session_name}:1" "clear" C-m
+    tmux send-keys -t "${session_name}:1" "ls" C-m
+    tmux rename-window -t "${session_name}:0" "$win1_name"
+    tmux select-window -t "${session_name}:0" 
+    tmux send-keys -t "${session_name}:0" "ls" C-m
+    tmux a -t "$session_name" 
+
+    return 0
+}
+
+save() {
+    local dir=$(pwd)
+    grep -q "^$dir$" "$savename" && { echo "Directory is already saved."; exit 1; }
+    printf "$dir\n" >> "$savename"
+    echo "Saved $dir to ws"
+}
+
+delete() {
+    local dir=$(fzf < "$savename")
+    [ -z "$dir" ] && exit 1
+    sed -Ei "\|^$dir$|d" "$savename"
+    echo "Removed $dir from ws"
+}
+
+load_tmux() {
+    local dir name
+    dir=$(fzf < "$savename")
+    [ -z "$dir" ] && exit 1
+    name=$(printf "$dir" | sed -E "s/^.*\/(.*)$/\1/g")
+    start_tmux "$name" "editor" "terminal" "$dir"
+}
+
+
+# Main:
+
+[ -f "$savename" ] || touch "$savename"
+
+case "$1" in
+    start)
+        start_tmux "workspace" "editor" "terminal" "."
+        ;;
+    load)
+        load_tmux
+        ;;
+    "")
+        load_tmux
+        ;;
+    save)
+        save
+        ;;
+    delete)
+        delete
+        ;;
+    remote)
+        [ -z "$2" ] && { echo "Please enter project name"; exit 1; }
+        start_tmux_remote "$2" "local" "remote"
+        ;;
+    *)
+        echo "$1 is not an option"
+        exit 1
+        ;;
+esac

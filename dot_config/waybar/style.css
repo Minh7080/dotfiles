@@ -1,0 +1,159 @@
+@import "mocha.css";
+
+window#waybar > * {
+  margin-top: 0px;
+  margin-bottom: 5px;
+  padding-top: 1px;
+  padding-bottom: 0px;
+}
+
+#clock {
+  margin-left: 20px;
+  padding: 0 15px;
+  margin-right: 20px;
+}
+
+#custom-power {
+  margin-right: 20px;
+}
+
+window#waybar {
+  font-family: "JetBrainsMono Nerd Font";
+  font-weight: bold;      
+  font-size: 14px;
+
+  background: alpha(@crust, 1);
+  color: @text;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+#tray {
+  margin-right: 20px;
+  padding: 0 10px;
+}
+
+
+#pulseaudio, #network, #battery {
+  border-radius: 20px 0 0 20px;
+  margin-left: 20px;
+}
+
+#pulseaudio, #backlight, #network, #bluetooth, #battery, #custom-power{
+  background-color: @base;
+  padding: 0 15px;
+}
+
+#tray {
+  border-radius: 5px;
+  background-color: @mantle;
+}
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: @subtext0;
+}
+
+
+
+#bluetooth, #backlight, #custom-power {
+  padding-left: 10px;
+  border-radius: 0 20px 20px 0;
+}
+
+#backlight, #custom-power {
+  padding-left: 0;
+}
+
+#custom-power {
+  padding-right: 20px;
+}
+
+#clock {
+  border-radius: 20px;
+  color: @peach;
+  background-color: @base;
+}
+
+#pulseaudio{
+    color: @sky;
+}
+#pulseaudio.muted  {
+    color: @red;
+}
+
+#backlight {
+  color: @text;
+}
+
+#network {
+  color: @yellow;
+}
+#network.disconnected {
+  color: @red;
+}
+
+#bluetooth {
+  color: @blue;
+}
+
+#battery.full {
+  color: @green;
+}
+
+#battery.normal,
+#battery {
+  color: @text;
+}
+
+#battery.warning {
+  color: @yellow;
+}
+
+#battery.critical {
+    color: @red;
+}
+
+#custom-power {
+  color: @maroon;
+}
+
+#workspaces {
+  padding: 5px 5px;
+  border-radius: 5px;
+  background-color: @mantle;
+}
+
+#workspaces button {
+  color: @text;
+  padding: 0px 5px;
+  margin: 0px 3px;
+  border-radius: 12px;
+  background-color: @surface1;
+  transition: all 0.1s ease-in-out;
+  opacity: 0.4;
+}
+
+#workspaces button.active {
+  background-color: @overlay0;
+  border-radius: 10px;
+  min-width: 50px;
+  background-size: 400% 400%;
+  transition: all 0.1s ease-in-out;
+  opacity:1.0;
+}
+
+#workspaces button:hover {
+  border-radius: 10px;
+  min-width: 50px;
+  background-size: 400% 400%;
+}
+
+@keyframes blink {
+  to {
+    background-color: rgba(30, 34, 42, 0.5);
+    color: #abb2bf;
+  }
+}

@@ -1,0 +1,56 @@
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+alias py="python3"
+alias nv="nvim"
+alias la="ls -a"
+
+#alias vi="set -o vi"
+#alias em="set -o emacs"
+
+alias jack-in="~/.bin/ssh_UNSW/ssh_to_UNSW.sh"
+alias transfer="~/.bin/ssh_UNSW/rsync_from_local_to_UNSW.sh"
+alias gimme="~/.bin/ssh_UNSW/rsync_from_UNSW_to_local.sh"
+alias mountcse="~/.bin/ssh_UNSW/mount_to_UNSW.sh"
+
+alias lg="lazygit"
+
+export PATH="$PATH:$HOME/.bin"
+
+
+export TERM='xterm-256color'
+export EDITOR='nvim'
+export VISUAL='nvim'
+
+eval "$(fzf --bash)"
+eval "$(starship init bash)"
+
+export PATH="$HOME/.config/tmux/plugins/tmuxifier/bin:$PATH"
+eval "$(tmuxifier init -)"
+
+#export TERM='xterm-direct'
+export EDITOR='/usr/bin/nvim'
+
+#Prevent CTRL-D from closing the terminal
+set -o ignoreeof
+
+set -o vi
+
+. /usr/share/nvm/init-nvm.sh
+
+export LIBVIRT_DEFAULT_URI='qemu:///system'
+
+function lf() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}

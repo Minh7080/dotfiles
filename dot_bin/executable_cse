@@ -1,0 +1,16 @@
+#!/bin/dash
+
+[ "$#" -ne 1 ] && { echo "Please provide a command"; exit 1; }
+
+case "$1" in
+    mount)
+        mountpoint -q /mnt/UNSW_remote/ || 
+            sshfs -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 z5662654@login.cse.unsw.edu.au:/home/z5662654/ /mnt/UNSW_remote/
+        ;;
+    ssh)
+        ssh -Y z5662654@login.cse.unsw.edu.au
+        ;;
+    *)
+        echo "Option $1 is invalid"
+        ;;
+esac

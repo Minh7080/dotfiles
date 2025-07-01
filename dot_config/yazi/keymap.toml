@@ -1,0 +1,9 @@
+[[mgr.prepend_keymap]]
+on   = [ "g", "D" ]
+run  = "cd ~/Desktop/"
+desc = "Go ~/Desktop/"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "p" ]
+run  = "cd ~/Desktop/unsw/comp1531/project-backend/"
+desc = "Go comp1531 project"
