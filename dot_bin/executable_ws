@@ -96,7 +96,7 @@ case "$1" in
         start_tmux_remote "$2" "local" "remote"
         ;;
     *)
-        echo "$1 is not an option"
+        echo "Usage: $0 {start|load|save|delete|remote}"
         exit 1
         ;;
 esac
