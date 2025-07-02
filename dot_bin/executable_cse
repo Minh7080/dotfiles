@@ -6,11 +6,11 @@ remote_dest="z5662654@login.cse.unsw.edu.au:/home/z5662654/Workspace/"
 
 case "$1" in
     mount)
-        mountpoint -q /mnt/UNSW_remote/ || 
+        mountpoint -q /mnt/UNSW_remote/ && echo "Already mounted" || 
             sshfs -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 z5662654@login.cse.unsw.edu.au:/home/z5662654/ /mnt/UNSW_remote/
         ;;
     umount)
-        mountpoint -q /mnt/UNSW_remote/ &&
+        mountpoint -q /mnt/UNSW_remote/ || { echo "Not mounted"; false; } &&
             umount /mnt/UNSW_remote/
         ;;
     ssh)
@@ -24,7 +24,7 @@ case "$1" in
         rsync ${remote_dest}$2 .
         ;;
     *)
-        echo "Usage: cse {mount|umount|ssh}"
+        echo "Usage: cse {mount|umount|ssh|push|pull}"
         exit 1
         ;;
 esac

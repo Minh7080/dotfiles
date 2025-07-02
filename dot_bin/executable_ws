@@ -2,6 +2,16 @@
 
 savename="/home/minhn/.bin/.ws_save"
 
+mount_dir="/mnt/UNSW_remote/Workspace/"
+
+fzf_improve() {
+    fzf --layout=reverse --preview 'ls --color=always {}' $@
+}
+
+fzf_remote() {
+    fzf --layout=reverse --preview "ls --color=always $mount_dir{}" $@
+}
+
 start_tmux() {
     local session_name win1_name win2_name start_dir
     session_name="$1"
@@ -27,11 +37,9 @@ start_tmux_remote() {
     win1_name="$2"
     win2_name="$3"
 
-    # Mount if not mounted
-    mountpoint -q /mnt/UNSW_remote/ ||
-        sshfs -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 z5662654@login.cse.unsw.edu.au:/home/z5662654/ /mnt/UNSW_remote/
+    mount
 
-    cd /mnt/UNSW_remote/Workspace/"$session_name"
+    cd "$mount_dir$session_name"
 
     tmux new-session -d -s "$session_name"
     tmux new-window -t "$session_name"
@@ -48,6 +56,12 @@ start_tmux_remote() {
     return 0
 }
 
+mount() {
+    # Mount if not mounted
+    mountpoint -q /mnt/UNSW_remote/ ||
+        sshfs -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 z5662654@login.cse.unsw.edu.au:/home/z5662654/ /mnt/UNSW_remote/
+    }
+
 save() {
     local dir=$(pwd)
     grep -q "^$dir$" "$savename" && { echo "Directory is already saved."; exit 1; }
@@ -56,15 +70,36 @@ save() {
 }
 
 delete() {
-    local dir=$(fzf < "$savename")
+    local dir=$(fzf_improve < "$savename")
     [ -z "$dir" ] && exit 1
     sed -Ei "\|^$dir$|d" "$savename"
     echo "Removed $dir from ws"
 }
 
-load_tmux() {
+load() {
     local dir name
-    dir=$(fzf < "$savename")
+    dir=$(fzf_improve < "$savename")
+    [ -z "$dir" ] && exit 1
+    name=$(printf "$dir" | sed -E "s/^.*\/(.*)$/\1/g")
+    start_tmux "$name" "editor" "terminal" "$dir"
+}
+
+# Doesn't work
+load_local_and_remote() {
+    local dir name dirs i remote_dir
+
+    mount
+    dirs=$(cat "$savename")
+
+    for i in $(ls "$mount_dir"); do
+        # remote_dir="Remote: $i $remote_dir"
+        remote_dir=$(printf "Remote: %s %s\n" $i $remote_dir)
+    done
+    echo "Debug: $remote_dir"
+    dirs=$(printf "%s\n%s\n" "$dirs" "$remote_dir")
+
+    dir=$(printf "%s\n" $dirs | fzf_improve)
+
     [ -z "$dir" ] && exit 1
     name=$(printf "$dir" | sed -E "s/^.*\/(.*)$/\1/g")
     start_tmux "$name" "editor" "terminal" "$dir"
@@ -80,10 +115,10 @@ case "$1" in
         start_tmux "workspace" "editor" "terminal" "."
         ;;
     load)
-        load_tmux
+        load
         ;;
     "")
-        load_tmux
+        load
         ;;
     save)
         save
@@ -92,8 +127,13 @@ case "$1" in
         delete
         ;;
     remote)
-        [ -z "$2" ] && { echo "Please enter project name"; exit 1; }
-        start_tmux_remote "$2" "local" "remote"
+        [ -z "$2" ] || { start_tmux_remote "$2" "local" "remote"; exit 0; }
+        mount
+
+        workspace=$(ls $mount_dir | fzf_remote)
+        [ -z "$workspace" ] && exit 1
+        
+        start_tmux_remote "$workspace" "local" "remote"
         ;;
     *)
         echo "Usage: ws {start|load|save|delete|remote}"
