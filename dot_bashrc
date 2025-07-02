@@ -12,15 +12,6 @@ alias diff='diff --color=auto'
 alias py="python3"
 alias nv="nvim"
 alias la="ls -a"
-
-#alias vi="set -o vi"
-#alias em="set -o emacs"
-
-alias jack-in="~/.bin/ssh_UNSW/ssh_to_UNSW.sh"
-alias transfer="~/.bin/ssh_UNSW/rsync_from_local_to_UNSW.sh"
-alias gimme="~/.bin/ssh_UNSW/rsync_from_UNSW_to_local.sh"
-alias mountcse="~/.bin/ssh_UNSW/mount_to_UNSW.sh"
-
 alias lg="lazygit"
 
 export PATH="$PATH:$HOME/.bin"
