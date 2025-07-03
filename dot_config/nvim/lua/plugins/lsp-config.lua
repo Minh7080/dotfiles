@@ -32,6 +32,7 @@ return {
             lspconfig.emmet_language_server.setup({capabilities = capabilities})
             lspconfig.cssls.setup({capabilities = capabilities})
             lspconfig.html.setup({capabilities = capabilities})
+            lspconfig.tailwindcss.setup({capabilities = capabilities})
             lspconfig.tinymist.setup({
                 capabilities = capabilities,
                 settings = {

@@ -5,7 +5,7 @@ savename="/home/minhn/.bin/.ws_save"
 mount_dir="/mnt/UNSW_remote/Workspace/"
 
 fzf_improve() {
-    fzf --layout=reverse --preview 'ls --color=always {}' $@
+    fzf --layout=reverse --preview "ls --color=always {}" $@
 }
 
 fzf_remote() {
@@ -18,6 +18,8 @@ start_tmux() {
     win1_name="$2"
     win2_name="$3"
     start_dir="$4"
+
+    tmux ls | cut -d":" -f1 | grep -q "$session_name" && { tmux a -t "$session_name"; return 0; }
 
     tmux new-session -d -s "$session_name" -c "$start_dir"
     tmux new-window -t "$session_name" -c "$start_dir"

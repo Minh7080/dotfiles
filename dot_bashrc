@@ -1,7 +1,3 @@
-#
-# ~/.bashrc
-#
-
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
@@ -14,6 +10,7 @@ alias py="python3"
 alias nv="nvim"
 alias la="ls -a"
 alias lg="lazygit"
+alias rm="trash-put"
 
 export PATH="$PATH:$HOME/.bin"
 
@@ -22,11 +19,10 @@ export TERM='xterm-256color'
 export EDITOR='nvim'
 export VISUAL='nvim'
 
-eval "$(fzf --bash)"
+# eval "$(fzf --bash)"
 eval "$(starship init bash)"
 
 export PATH="$HOME/.config/tmux/plugins/tmuxifier/bin:$PATH"
-eval "$(tmuxifier init -)"
 
 #export TERM='xterm-direct'
 export EDITOR='/usr/bin/nvim'
@@ -47,3 +43,13 @@ function lf() {
 	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
+
+fzf_search() {
+    file=$(fzf --layout=reverse --preview="bat --color=always {}")
+
+    [ -z "$file" ] && return 1
+
+    echo "$file" | xargs "$EDITOR"
+}
+
+bind -x '"\C-f": fzf_search'
