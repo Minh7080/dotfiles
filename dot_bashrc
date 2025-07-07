@@ -24,9 +24,6 @@ eval "$(starship init bash)"
 
 export PATH="$HOME/.config/tmux/plugins/tmuxifier/bin:$PATH"
 
-#export TERM='xterm-direct'
-export EDITOR='/usr/bin/nvim'
-
 #Prevent CTRL-D from closing the terminal
 set -o ignoreeof
 
@@ -44,12 +41,4 @@ function lf() {
 	rm -f -- "$tmp"
 }
 
-fzf_search() {
-    file=$(fzf --layout=reverse --preview="bat --color=always {}")
-
-    [ -z "$file" ] && return 1
-
-    echo "$file" | xargs "$EDITOR"
-}
-
-bind -x '"\C-f": fzf_search'
+bind -x '"\C-f": . /home/minhn/.bin/fzf_search'

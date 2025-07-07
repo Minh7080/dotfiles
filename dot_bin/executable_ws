@@ -39,6 +39,8 @@ start_tmux_remote() {
     win1_name="$2"
     win2_name="$3"
 
+    tmux ls | cut -d":" -f1 | grep -q "$session_name" && { tmux a -t "$session_name"; return 0; }
+
     mount
 
     cd "$mount_dir$session_name"

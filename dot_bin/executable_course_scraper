@@ -1,0 +1,20 @@
+#!/bin/dash
+
+YEAR=$(date "+%G")
+JSON=$(curl -sL "https://handbook-proxy.cse.unsw.edu.au/current/api/search-all?searchType=advanced&siteId=unsw-prod-pres&query=&siteYear=$YEAR")
+
+scrape_course() {
+    echo "$JSON" | jq -r '.data.results[] | select (.lines[1] == "Undergraduate" or .lines[1] == "Postgraduate") | [.code, .title] | join(" ")' | sort | uniq | sed -E 's/ {2,}/ /g'
+}
+
+find_uri() {
+    local course
+    read course
+    echo "$JSON" | jq --arg course "$course" -r '.data.results[] | select (.lines[1] == "Undergraduate" or .lines[1] == "Postgraduate") | {code, uri} | select(.code == $course) | .uri'
+}
+
+URI=$(scrape_course | fzf --layout=reverse | cut -d' ' -f1 | find_uri)
+
+[ -z "$URI" ] && exit 1
+
+nohup firefox --new-tab "https://www.handbook.unsw.edu.au$URI" > /dev/null 2>&1 &

@@ -1,0 +1,78 @@
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
+
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+
+# Load completions
+autoload -U compinit && compinit
+HISTSIZE=5000
+HISTFILE=~/.histfile
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+#########################################################################
+
+bindkey -v
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias diff='diff --color=auto'
+alias tree='tree -C'
+
+alias py="python3"
+alias nv="nvim"
+alias la="ls -a"
+alias lg="lazygit"
+alias rm="trash-put"
+
+export PATH="$PATH:$HOME/.bin"
+
+export TERM='xterm-256color'
+export EDITOR='nvim'
+export VISUAL='nvim'
+
+# eval "$(fzf --bash)"
+eval "$(starship init zsh)"
+
+export PATH="$HOME/.config/tmux/plugins/tmuxifier/bin:$PATH"
+
+#Prevent CTRL-D from closing the terminal
+
+. /usr/share/nvm/init-nvm.sh
+
+export LIBVIRT_DEFAULT_URI='qemu:///system'
+
+function lf() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+
+fzf_search_widget() {
+    . /home/minhn/.bin/fzf_search
+}
+
+zle -N fzf_search_widget
+bindkey -M viins '^f' fzf_search_widget
+
+bindkey '\e[127;5u' backward-kill-word
+bindkey -M viins '\e[127;5u' backward-kill-word
+bindkey -M viins '^y' autosuggest-accept
+bindkey -M viins '^p' history-search-backward
+bindkey -M viins '^n' history-search-forward
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
