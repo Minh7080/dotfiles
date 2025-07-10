@@ -63,7 +63,11 @@ start_tmux_remote() {
 mount() {
     # Mount if not mounted
     mountpoint -q /mnt/UNSW_remote/ ||
-        sshfs -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 z5662654@login.cse.unsw.edu.au:/home/z5662654/ /mnt/UNSW_remote/
+        sshfs -o cache=yes -o kernel_cache -o attr_timeout=600 \
+        -o entry_timeout=3600 -o negative_timeout=600 \
+        -o reconnect \
+        -o ssh_command="ssh -o ServerAliveInterval=15 -o ServerAliveCountMax=3" \
+        z5662654@login.cse.unsw.edu.au:/home/z5662654/ /mnt/UNSW_remote/
     }
 
 save() {
@@ -136,7 +140,7 @@ case "$1" in
 
         workspace=$(ls $mount_dir | fzf_remote)
         [ -z "$workspace" ] && exit 1
-        
+
         start_tmux_remote "$workspace" "local" "remote"
         ;;
     *)

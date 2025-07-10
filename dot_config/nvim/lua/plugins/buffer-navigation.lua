@@ -25,6 +25,13 @@ return {
                 },
             })
             require("telescope").load_extension("ui-select")
+
+            vim.keymap.set('n', '<leader>t', ':Telescope<cr>')
+            vim.keymap.set('n', '<leader>g', ':Telescope live_grep<cr>')
+            vim.keymap.set('n', '<leader>f', ':Telescope find_files<cr>')
+            vim.keymap.set('n', '<Leader>B', ':Telescope current_buffer_fuzzy_find<cr>')
+            vim.keymap.set('n', '<leader>b', ':Telescope buffers<cr>')
+
         end,
     },
     {

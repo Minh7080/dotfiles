@@ -23,22 +23,12 @@ vim.opt.termguicolors = true
 
 vim.g.mapleader = " "
 
-vim.keymap.set('n', '<Leader>tt', ':Telescope<cr>')
-vim.keymap.set('n', '<Leader>tg', ':Telescope live_grep<cr>')
-vim.keymap.set('n', '<Leader>tf', ':Telescope find_files<cr>')
-vim.keymap.set('n', '<Leader>tc', ':Telescope current_buffer_fuzzy_find<cr>')
-vim.keymap.set('n', '<Leader>tb', ':Telescope buffers<cr>')
-
 vim.keymap.set({'n', "v", "i"}, '<A-p>', '<Esc>:b#<cr>', {noremap = true})
 vim.keymap.set({'n', "v", "i"}, '<A-m>', '<Esc>:bp<cr>', {noremap = true})
 vim.keymap.set({'n', "v", "i"}, '<A-n>', '<Esc>:bn<cr>', {noremap = true})
 
 vim.keymap.set('n', '<C-u>', '<C-u>zz', {noremap = true})
 vim.keymap.set('n', '<C-d>', '<C-d>zz', {noremap = true})
-
-vim.keymap.set('n', '<Leader>op', ':ObsidianPasteImg<cr>')
-vim.keymap.set('n', '<Leader>ot', ':ObsidianTags<cr>')
-vim.keymap.set('n', '<Leader>ob', ':ObsidianBacklinks<cr>')
 
 vim.keymap.set('n', '<Leader>\\', ':set hlsearch!<cr>')
 
@@ -116,7 +106,7 @@ vim.api.nvim_create_autocmd("FileType", {
     end
 })
 
-vim.g.copilot_enabled = false
+--[[ vim.g.copilot_enabled = false
 
 vim.api.nvim_create_user_command("ToggleCopilot", function()
   if vim.g.copilot_enabled then
@@ -128,7 +118,7 @@ vim.api.nvim_create_user_command("ToggleCopilot", function()
     vim.g.copilot_enabled = true
     print("Copilot enabled")
   end
-end, {})
+end, {}) ]]
 
 vim.api.nvim_set_keymap("n", "<leader>P", ":TypstPreview<CR>", { noremap = true, silent = true })
 
@@ -147,5 +137,5 @@ vim.api.nvim_create_user_command("OpenPdf", function()
         vim.fn.system("typst compile " .. typ_filepath)
     end
 
-    vim.fn.system("nohup xdg-open " .. pdf_filepath .. " & disown")
+    vim.fn.system("nohup xdg-open " .. pdf_filepath .. " > /dev/null 2>&1 & disown")
 end, {})

@@ -23,6 +23,9 @@ setopt hist_find_no_dups
 
 #########################################################################
 
+# Get rid of the default prompt
+PS1=""
+
 bindkey -v
 
 alias ls='ls --color=auto'
@@ -68,8 +71,8 @@ fzf_search_widget() {
 zle -N fzf_search_widget
 bindkey -M viins '^f' fzf_search_widget
 
-bindkey '\e[127;5u' backward-kill-word
-bindkey -M viins '\e[127;5u' backward-kill-word
+bindkey '^H' backward-kill-word
+bindkey -M viins '^H' backward-kill-word
 bindkey -M viins '^y' autosuggest-accept
 bindkey -M viins '^p' history-search-backward
 bindkey -M viins '^n' history-search-forward
