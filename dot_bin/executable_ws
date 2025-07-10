@@ -1,6 +1,6 @@
 #!/bin/dash
 
-savename="/home/minhn/.bin/.ws_save"
+savename="$(dirname "$0")/.ws_save"
 
 mount_dir="/mnt/UNSW_remote/Workspace/"
 
