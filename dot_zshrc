@@ -7,6 +7,15 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 
+# Set this before loading the plugin
+ZVM_INIT_MODE=sourcing
+zinit ice depth=1
+zinit light jeffreytse/zsh-vi-mode
+
+zinit light hlissner/zsh-autopair
+autoload -Uz autopair-init
+autopair-init
+
 # Load completions
 autoload -U compinit && compinit
 HISTSIZE=5000
@@ -22,6 +31,8 @@ setopt hist_ignore_dups
 setopt hist_find_no_dups
 
 #########################################################################
+# Change to Zsh's default readkey engine
+# ZVM_READKEY_ENGINE=$ZVM_READKEY_ENGINE_DEFAULT
 
 # Get rid of the default prompt
 PS1=""
@@ -64,18 +75,26 @@ function lf() {
 	rm -f -- "$tmp"
 }
 
+[ -f ~/.env ] && { source ~/.env; }
+
 fzf_search_widget() {
     . /home/minhn/.bin/fzf_search
 }
 
 zle -N fzf_search_widget
 bindkey -M viins '^f' fzf_search_widget
+bindkey -M vicmd '^f' fzf_search_widget
+
+# zvm_define_widget fzf_search_widget
+# zvm_bindkey vicmd '^f' fzf_search_widget
+# zvm_bindkey vicmd '^E' fzf_search_widget
 
 bindkey '^H' backward-kill-word
 bindkey -M viins '^H' backward-kill-word
 bindkey -M viins '^y' autosuggest-accept
 bindkey -M viins '^p' history-search-backward
 bindkey -M viins '^n' history-search-forward
+
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu select

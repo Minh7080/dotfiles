@@ -23,8 +23,8 @@ vim.opt.termguicolors = true
 
 vim.g.mapleader = " "
 
-vim.keymap.set({'n', "v", "i"}, '<A-p>', '<Esc>:b#<cr>', {noremap = true})
-vim.keymap.set({'n', "v", "i"}, '<A-m>', '<Esc>:bp<cr>', {noremap = true})
+vim.keymap.set({'n', "v", "i"}, '<A-;>', '<Esc>:b#<cr>', {noremap = true})
+vim.keymap.set({'n', "v", "i"}, '<A-p>', '<Esc>:bp<cr>', {noremap = true})
 vim.keymap.set({'n', "v", "i"}, '<A-n>', '<Esc>:bn<cr>', {noremap = true})
 
 vim.keymap.set('n', '<C-u>', '<C-u>zz', {noremap = true})
@@ -39,6 +39,7 @@ vim.keymap.set('n', '<Leader>ut', ':UndotreeToggle<cr><C-w>h<C-w>k')
 
 -- Remap Ctrl + Backspace to delete a word in insert mode
 vim.api.nvim_set_keymap('i', '<C-BS>', '<C-w>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-h>', '<C-w>', { noremap = true, silent = true })
 -- Remap Ctrl + Delete to delete the next word in insert mode
 vim.api.nvim_set_keymap('i', '<C-Delete>', '<C-o>dw', { noremap = true, silent = true })
 
@@ -54,35 +55,38 @@ vim.keymap.set("v", "<leader>re", function() require('refactoring').refactor('Ex
 
 vim.keymap.set('n', '<Leader>p', ':Oil --float<cr>')
 
-vim.keymap.set('n', '<C-y>', '"ay')
-vim.keymap.set('n', '<C-p>', '"ap')
-vim.keymap.set('n', '<C-P>', '"aP')
+-- vim.keymap.set('n', '<C-y>', '"ay')
+-- vim.keymap.set('n', '<C-p>', '"ap')
+-- vim.keymap.set('n', '<C-P>', '"aP')
+
+vim.keymap.set("n", "<C-n>", vim.diagnostic.goto_next)
+vim.keymap.set("n", "<C-p>", vim.diagnostic.goto_prev)
 
 vim.keymap.set("n", "<F5>", function()
----@diagnostic disable-next-line: undefined-field
-    local current = vim.opt.colorcolumn:get()
-    if #current == 0 then
-        vim.opt.colorcolumn = "80"
-    elseif current[1] == "80" then
-        vim.opt.colorcolumn = "120"
-    else
-        vim.opt.colorcolumn = ""
-    end
+  ---@diagnostic disable-next-line: undefined-field
+  local current = vim.opt.colorcolumn:get()
+  if #current == 0 then
+    vim.opt.colorcolumn = "80"
+  elseif current[1] == "80" then
+    vim.opt.colorcolumn = "120"
+  else
+    vim.opt.colorcolumn = ""
+  end
 end, { noremap = true, silent = true })
 
 -- Function to toggle LSP client
 local function toggle_intellisense()
-    local clients = vim.lsp.get_active_clients()
-    local cmp = require("cmp")
-    if next(clients) == nil then
-        vim.cmd("LspStart")  -- Start LSP if not active
-        cmp.setup({enabled = true})
-        print("IntelliSense Started")
-    else
-        vim.cmd("LspStop")   -- Stop LSP if active
-        cmp.setup({enabled = false})
-        print("IntelliSense Stopped")
-    end
+  local clients = vim.lsp.get_active_clients()
+  local cmp = require("cmp")
+  if next(clients) == nil then
+    vim.cmd("LspStart")  -- Start LSP if not active
+    cmp.setup({enabled = true})
+    print("IntelliSense Started")
+  else
+    vim.cmd("LspStop")   -- Stop LSP if active
+    cmp.setup({enabled = false})
+    print("IntelliSense Stopped")
+  end
 end
 
 -- Set key mapping to toggle LSP
@@ -90,20 +94,21 @@ vim.keymap.set('n', '<F6>', toggle_intellisense, { noremap = true, silent = true
 
 
 local function tabstop2()
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.tabstop = 2
+  vim.opt_local.shiftwidth = 2
+  vim.opt_local.tabstop = 2
 end
 
 vim.api.nvim_create_autocmd("FileType", {pattern = "html", callback = tabstop2})
 vim.api.nvim_create_autocmd("FileType", {pattern = "css",callback = tabstop2})
 vim.api.nvim_create_autocmd("FileType", {pattern = "javascript",callback = tabstop2})
 vim.api.nvim_create_autocmd("FileType", {pattern = "typescript",callback = tabstop2})
+vim.api.nvim_create_autocmd("FileType", {pattern = "lua",callback = tabstop2})
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = "asm",
-    callback = function()
-        vim.opt_local.shiftwidth = 8
-        vim.opt_local.tabstop = 8
-    end
+  pattern = "asm",
+  callback = function()
+    vim.opt_local.shiftwidth = 8
+    vim.opt_local.tabstop = 8
+  end
 })
 
 --[[ vim.g.copilot_enabled = false
@@ -123,19 +128,32 @@ end, {}) ]]
 vim.api.nvim_set_keymap("n", "<leader>P", ":TypstPreview<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_create_user_command("OpenPdf", function()
-    if vim.bo.filetype ~= "typst" then
-        print("Not a typst file")
-        return
-    end
+  if vim.bo.filetype ~= "typst" then
+    print("Not a typst file")
+    return
+  end
 
-    local typ_filepath = vim.api.nvim_buf_get_name(0)
-    local pdf_filepath = string.sub(typ_filepath, 1, -4) .. "pdf"
+  local typ_filepath = vim.api.nvim_buf_get_name(0)
+  local pdf_filepath = string.sub(typ_filepath, 1, -4) .. "pdf"
 
-    if vim.loop.fs_stat(pdf_filepath) == nil then
-        vim.fn.system("which typst")
-        if vim.v.shell_error ~= 0 then print("Typst not found") return end
-        vim.fn.system("typst compile " .. typ_filepath)
-    end
+  if vim.loop.fs_stat(pdf_filepath) == nil then
+    vim.fn.system("which typst")
+    if vim.v.shell_error ~= 0 then print("Typst not found") return end
+    vim.fn.system("typst compile " .. typ_filepath)
+  end
 
-    vim.fn.system("nohup xdg-open " .. pdf_filepath .. " > /dev/null 2>&1 & disown")
+  vim.fn.system("nohup xdg-open " .. pdf_filepath .. " > /dev/null 2>&1 & disown")
 end, {})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "text", "typst" },
+  callback = function()
+    vim.opt_local.textwidth = 80
+    vim.opt_local.formatoptions:append("t")
+  end,
+})
+
+--[[ local projectfile = vim.fn.getcwd() .. '/project.godot'
+if projectfile then
+  vim.fn.serverstart './godothost'
+end ]]
