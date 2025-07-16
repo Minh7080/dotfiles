@@ -8,7 +8,7 @@ import mimetypes
 from email.message import EmailMessage
 
 if len(sys.argv) <= 1:
-    print(f"Usage: {os.path.basename(__file__)} <file1> <fileN>")
+    print(f"Usage: {os.path.basename(sys.argv[0])} <file1> <fileN>")
     sys.exit(1)
 
 email = os.getenv('EMAIL')
