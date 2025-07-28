@@ -25,7 +25,7 @@ case "$1" in
         rsync $@ $remote_dest
         ;;
     pull)
-        rsync ${remote_dest}$2 .
+        rsync -avL ${remote_dest}$2 .
         ;;
     *)
         echo "Usage: cse {mount|umount|ssh|push|pull}"

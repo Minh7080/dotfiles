@@ -98,11 +98,25 @@ local function tabstop2()
   vim.opt_local.tabstop = 2
 end
 
-vim.api.nvim_create_autocmd("FileType", {pattern = "html", callback = tabstop2})
-vim.api.nvim_create_autocmd("FileType", {pattern = "css",callback = tabstop2})
-vim.api.nvim_create_autocmd("FileType", {pattern = "javascript",callback = tabstop2})
-vim.api.nvim_create_autocmd("FileType", {pattern = "typescript",callback = tabstop2})
-vim.api.nvim_create_autocmd("FileType", {pattern = "lua",callback = tabstop2})
+local patterns = {
+  "html",
+  "css",
+  "javascript",
+  "typescript",
+  "lua",
+  "typescriptreact",
+  "javascriptreact",
+  "json"
+}
+for _, pattern in ipairs(patterns) do
+  vim.api.nvim_create_autocmd("FileType", {pattern = pattern, callback = tabstop2})
+end
+
+-- vim.api.nvim_create_autocmd("FileType", {pattern = "html", callback = tabstop2})
+-- vim.api.nvim_create_autocmd("FileType", {pattern = "css",callback = tabstop2})
+-- vim.api.nvim_create_autocmd("FileType", {pattern = "javascript",callback = tabstop2})
+-- vim.api.nvim_create_autocmd("FileType", {pattern = "typescript",callback = tabstop2})
+-- vim.api.nvim_create_autocmd("FileType", {pattern = "lua",callback = tabstop2})
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "asm",
   callback = function()

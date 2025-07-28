@@ -1,6 +1,6 @@
 #!/bin/dash
 
-savename="$(dirname "$0")/.ws_save"
+savename="$HOME/.config/ws_save"
 
 mount_dir="/mnt/UNSW_remote/Workspace/"
 
@@ -88,31 +88,13 @@ load() {
     local dir name
     dir=$(fzf_improve < "$savename")
     [ -z "$dir" ] && exit 1
-    name=$(printf "$dir" | sed -E "s/^.*\/(.*)$/\1/g")
+    [ -e "$dir" ] || {
+        echo "Directory doesn't exist"
+        exit 1
+    }
+    name=$(basename "$dir")
     start_tmux "$name" "editor" "terminal" "$dir"
 }
-
-# Doesn't work
-load_local_and_remote() {
-    local dir name dirs i remote_dir
-
-    mount
-    dirs=$(cat "$savename")
-
-    for i in $(ls "$mount_dir"); do
-        # remote_dir="Remote: $i $remote_dir"
-        remote_dir=$(printf "Remote: %s %s\n" $i $remote_dir)
-    done
-    echo "Debug: $remote_dir"
-    dirs=$(printf "%s\n%s\n" "$dirs" "$remote_dir")
-
-    dir=$(printf "%s\n" $dirs | fzf_improve)
-
-    [ -z "$dir" ] && exit 1
-    name=$(printf "$dir" | sed -E "s/^.*\/(.*)$/\1/g")
-    start_tmux "$name" "editor" "terminal" "$dir"
-}
-
 
 # Main:
 

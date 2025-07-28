@@ -50,16 +50,16 @@ alias la="ls -a"
 alias lg="lazygit"
 alias rm="trash-put"
 
-export PATH="$PATH:$HOME/.bin"
-
 export TERM='xterm-256color'
 export EDITOR='nvim'
 export VISUAL='nvim'
 
-# eval "$(fzf --bash)"
+export $(grep -v '^#' ~/.env | xargs)
+
+eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 
-export PATH="$HOME/.config/tmux/plugins/tmuxifier/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 #Prevent CTRL-D from closing the terminal
 
@@ -75,10 +75,8 @@ function lf() {
 	rm -f -- "$tmp"
 }
 
-[ -f ~/.env ] && { source ~/.env; }
-
 fzf_search_widget() {
-    . /home/minhn/.bin/fzf_search
+    . /home/minhn/.local/bin/fzf-search
 }
 
 zle -N fzf_search_widget
