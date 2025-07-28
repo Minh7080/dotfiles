@@ -2,8 +2,8 @@
 
 program="$1"
 shift 1
-status=$(pgrep -x "$program") && {
-    kill "$status"
+pid=$(pgrep -x "$program") && {
+    kill "$pid"
     exit
 }
 "$program" $@
