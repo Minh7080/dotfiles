@@ -1,8 +1,7 @@
+return {}
 --[[ return {
   'github/copilot.vim'
 } ]]
-
-return {}
 
 --[[ return {
   {

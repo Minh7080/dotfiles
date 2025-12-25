@@ -9,14 +9,14 @@ return {
     opts = {
       toggler = {
         ---Line-comment toggle keymap
-        line = '<c-/>',
+        line = '<c-k>',
         ---Block-comment toggle keymap
         block = '<c-\\>',
       },
       ---LHS of operator-pending mappings in NORMAL and VISUAL mode
       opleader = {
         ---Line-comment keymap
-        line = '<c-/>',
+        line = '<c-k>',
         ---Block-comment keymap
         block = '<c-\\>',
       },

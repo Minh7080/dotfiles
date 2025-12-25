@@ -18,43 +18,42 @@ return {
     dependencies = {
       'saghen/blink.cmp'
     },
-    lazy = false,
     config = function()
       local capabilities = require('blink.cmp').get_lsp_capabilities()
-      local lspconfig = require('lspconfig')
-      lspconfig.tinymist.setup({
+      vim.lsp.config('tinymist', {
         capabilities = capabilities,
         settings = {
           exportPdf = "onType"
         }
       })
-      --[[ local capabilities = require('blink.cmp').get_lsp_capabilities()
-      local lspconfig = require('lspconfig')
-      lspconfig.lua_ls.setup({capabilities = capabilities})
-      lspconfig.jdtls.setup({capabilities = capabilities})
-      lspconfig.pylsp.setup({capabilities = capabilities})
-      lspconfig.clangd.setup({capabilities = capabilities})
-      lspconfig.marksman.setup({capabilities = capabilities})
-      lspconfig.ts_ls.setup({capabilities = capabilities})
-      lspconfig.emmet_language_server.setup({capabilities = capabilities})
-      lspconfig.cssls.setup({capabilities = capabilities})
-      lspconfig.html.setup({capabilities = capabilities})
-      lspconfig.tailwindcss.setup({capabilities = capabilities})
-      lspconfig.rust_analyzer.setup({
+      vim.lsp.enable('tinymist')
+
+      --[[ require('lspconfig').tinymist.setup ({
         capabilities = capabilities,
         settings = {
-          ['rust_analyzer'] = {
-            cargo = {
-              allFeatures = true,
-            },
-          },
-        },
+          exportPdf = "onType"
+        }
       }) ]]
 
-      vim.keymap.set('n', '<Leader>j', vim.lsp.buf.hover, {})
+      --[[ vim.keymap.set('n', '<Leader>j', vim.lsp.buf.hover, {})
       vim.keymap.set('n', '<Leader>k', vim.lsp.buf.definition, {})
       vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, {})
-      vim.keymap.set({'n', 'v'}, '<Leader>ca', vim.lsp.buf.code_action, {})
+      vim.keymap.set('n', '<Leader>rr', vim.lsp.buf.references, {})
+      vim.keymap.set('n', '<Leader>d', vim.diagnostic.open_float, {})
+      vim.keymap.set({'n', 'v'}, '<Leader>ca', vim.lsp.buf.code_action, {}) ]]
+
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+      vim.keymap.set('n', 'K', vim.lsp.buf.hover)
+      vim.keymap.set({'n', 'v'}, 'ga', vim.lsp.buf.code_action)
+      vim.keymap.set('n', 'gD', vim.diagnostic.open_float)
+
+      local telescope = require('telescope.builtin')
+      vim.keymap.set('n', 'grr', function()
+        telescope.lsp_references({
+          -- Optional: show preview window on the right
+          previewer = true,
+        })
+      end, { noremap = true, silent = true })
 
       vim.diagnostic.config({
         virtual_text = { prefix = "■", spacing = 4},

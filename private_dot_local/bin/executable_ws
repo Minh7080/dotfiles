@@ -5,11 +5,25 @@ savename="$HOME/.config/ws_save"
 mount_dir="/mnt/UNSW_remote/Workspace/"
 
 fzf_improve() {
-    fzf --layout=reverse --preview "ls --color=always {}" $@
+    fzf --layout=reverse --preview '
+    echo $(basename {})
+    echo 
+    ls --color=always {}
+    ' $@
+}
+
+fzf_improve_multi() {
+    fzf --multi --layout=reverse --preview '
+    echo $(basename {})
+    echo 
+    ls --color=always {}
+    ' $@
 }
 
 fzf_remote() {
-    fzf --layout=reverse --preview "ls --color=always $mount_dir{}" $@
+    fzf --layout=reverse --preview "
+    ls --color=always $mount_dir{};
+    " $@
 }
 
 start_tmux() {
@@ -78,10 +92,11 @@ save() {
 }
 
 delete() {
-    local dir=$(fzf_improve < "$savename")
-    [ -z "$dir" ] && exit 1
-    sed -Ei "\|^$dir$|d" "$savename"
-    echo "Removed $dir from ws"
+    for dir in $(fzf_improve_multi < "$savename"); do
+        [ -z "$dir" ] && exit 1
+        sed -Ei "\|^$dir$|d" "$savename"
+        echo "Removed $dir from ws"
+    done
 }
 
 load() {

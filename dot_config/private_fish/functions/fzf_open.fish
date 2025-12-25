@@ -1,5 +1,9 @@
 function fzf_open
-    set file (fd . --type f $argv | fzf --layout=reverse --preview="bat --plain --color=always {}")
+    set file (fd . --type f $argv | fzf --layout=reverse --preview='
+    echo $(basename {})
+    echo
+    bat --plain --color=always {}
+    ')
 
     if test -z "$file"
         return 1

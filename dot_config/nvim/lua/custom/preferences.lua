@@ -11,6 +11,9 @@ vim.opt.shiftwidth = 4
 vim.opt.smarttab = true
 vim.opt.clipboard = "unnamedplus" --Allow nvim to paste from clipboard
 
+
+vim.o.cursorline = true
+
 vim.opt.scrolloff = 5
 
 vim.opt.virtualedit = "block"
@@ -112,11 +115,6 @@ for _, pattern in ipairs(patterns) do
   vim.api.nvim_create_autocmd("FileType", {pattern = pattern, callback = tabstop2})
 end
 
--- vim.api.nvim_create_autocmd("FileType", {pattern = "html", callback = tabstop2})
--- vim.api.nvim_create_autocmd("FileType", {pattern = "css",callback = tabstop2})
--- vim.api.nvim_create_autocmd("FileType", {pattern = "javascript",callback = tabstop2})
--- vim.api.nvim_create_autocmd("FileType", {pattern = "typescript",callback = tabstop2})
--- vim.api.nvim_create_autocmd("FileType", {pattern = "lua",callback = tabstop2})
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "asm",
   callback = function()

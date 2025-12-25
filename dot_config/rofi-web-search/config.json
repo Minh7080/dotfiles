@@ -1,0 +1,8 @@
+{
+    "SEARCH_ENGINE": "duckduckgo",
+    "BROWSER": "chrome",
+    "TERMINAL": [
+        "kitty",
+        "--"
+    ]
+}

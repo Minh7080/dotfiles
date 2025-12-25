@@ -23,10 +23,12 @@ if status is-interactive
 
     alias tree='tree -C'
 
-    alias py="python3"
-    alias nv="nvim"
-    alias lg="lazygit"
-    alias rm="trash-put"
+    alias py='python3'
+    alias nv='nvim'
+    alias lg='lazygit'
+    alias rm='trash-put'
+    alias tx='tmuxinator'
+    alias gradle8='/opt/gradle/gradle-8.8/bin/gradle'
 
     set -x TERM 'xterm-256color'
     set -x EDITOR 'nvim'
@@ -35,7 +37,7 @@ if status is-interactive
     # Load env vars from shared file
     for line in (cat ~/.env | grep -v '^#' | grep -v '^$')
         set key (string split '=' $line)[1]
-        set val (string split '=' $line)[2]
+        set val (string replace -a '\'' '' (string split '=' $line)[2])
         set -x $key $val
     end
 

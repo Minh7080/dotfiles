@@ -1,6 +1,6 @@
 #!/bin/dash
 
-file=$(fd . --type f $@ | fzf --layout=reverse --preview="bat --plain --color=always {}")
+file=$(fd . --type f $@ | fzf --layout=reverse --preview='echo $(basename {}); echo; bat --plain --color=always {}')
 
 [ -z "$file" ] && return 1
 
