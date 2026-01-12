@@ -21,6 +21,9 @@ if status is-interactive
     # alias diff='diff --color=auto'
     # alias la="ls -a"
 
+    set -gx PATH ~/.config/tmux/plugins/tmuxifier/bin $PATH
+    eval (tmuxifier init - fish)
+
     alias tree='tree -C'
 
     alias py='python3'
